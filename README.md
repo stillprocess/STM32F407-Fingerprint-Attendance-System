@@ -21,6 +21,20 @@
 
 当前源码没有 AT24C02 和 IWDG 的应用代码。`uart.c` 中保留了 USART3 驱动，但当前任务流程没有初始化或使用 USART3。
 
+### 接口分配
+
+| 模块 | STM32 引脚 | 说明 |
+| --- | --- | --- |
+| USART1 | PA9 / PA10 | 调试串口，当前程序只发送日志 |
+| FPM383F | PA2 / PA3 | USART2 TX / RX，57600 bit/s |
+| W25Q128 | PB3 / PB4 / PB5 / PB14 | SPI1 SCK / MISO / MOSI / CS |
+| OLED | PB15 / PD10 | SCL / SDA，GPIO 模拟 I2C |
+| 舵机 | PC9 | TIM3 CH4 PWM |
+| 蜂鸣器 | PF8 | GPIO 输出 |
+| S1～S4 | PA0 / PE2 / PE3 / PE4 | EXTI 输入 |
+| 矩阵键盘行线 | PD6 / PD7 / PC6 / PC8 | 4×4 键盘扫描输出 |
+| 矩阵键盘列线 | PC11 / PE5 / PA6 / PC7 | 4×4 键盘扫描输入 |
+
 ## 3. 软件环境
 
 - Keil MDK，工程文件：`USER/project.uvprojx`
@@ -124,6 +138,15 @@ FPM383F 进行 1:N 匹配
 
 `OBJ/`、`LIST/`、`.vscode/` 和 Keil 用户级配置保留在本地，但不提交到仓库。
 
+### 代码入口
+
+- [`USER/main.c`](USER/main.c)：硬件初始化、FreeRTOS 对象初始化和任务创建。
+- [`USER/app_keyboard.c`](USER/app_keyboard.c)：密码、管理权限、考勤和记录菜单。
+- [`USER/app_fingerprint.c`](USER/app_fingerprint.c)：指纹按键事件和 FPM383F 命令处理。
+- [`USER/app_servo.c`](USER/app_servo.c)：开锁请求和自动上锁。
+- [`HARDWARE/w25q128.c`](HARDWARE/w25q128.c)：密码摘要和考勤记录存储。
+- [`HARDWARE/FPM383F.c`](HARDWARE/FPM383F.c)：指纹模块协议和 USART2 接收。
+
 ## 8. 关键实现
 
 ### 8.1 指纹命令串行处理
@@ -155,3 +178,11 @@ FPM383F 进行 1:N 匹配
 5. 连接 USART1 查看调试信息：9600 bit/s、8 data bits、1 stop bit、no parity、no flow control。
 6. 第一次使用前确认 RTC 时间，并通过 4×4 键盘设置六位密码。
 
+`OBJ/` 和 `LIST/` 未提交，克隆仓库后需要在 Keil 中重新 Build。
+
+## 10. 当前限制
+
+- RTC 只在备份域未初始化时写入 `RTC.c` 中的固定时间，程序没有校时菜单。
+- 考勤记录最多保存 100 条，写满后停止追加，没有覆盖和导出功能。
+- 指纹模板 ID 范围固定为 1～50。
+- AT24C02、IWDG、任务通知和应用层软件定时器没有接入当前业务流程。
