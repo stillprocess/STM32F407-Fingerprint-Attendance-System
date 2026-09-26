@@ -1,0 +1,48 @@
+# Keil build output
+OBJ/
+LIST/
+Objects/
+Listings/
+Debug/
+build/
+Build/
+
+*.o
+*.obj
+*.d
+*.crf
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.lnp
+*.dep
+*.build_log.htm
+
+# Keil user and debug settings
+*.uvopt
+*.uvoptx
+*.uvgui
+*.uvgui.*
+*.uvguix
+*.uvguix.*
+**/DebugConfig/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.swp
+*~
+
+# Local credentials and environment files
+secrets.h
+**/secrets.h
+.env
+.env.*
+!.env.example
