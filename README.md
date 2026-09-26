@@ -1,4 +1,4 @@
-# STM32 FreeRTOS Fingerprint Attendance System
+# 基于 STM32F407 的智能指纹考勤机
 
 ## 1. 项目简介
 
@@ -154,5 +154,4 @@ FPM383F 进行 1:N 匹配
 4. 连接调试器，将程序下载到 STM32F407ZETx。
 5. 连接 USART1 查看调试信息：9600 bit/s、8 data bits、1 stop bit、no parity、no flow control。
 6. 第一次使用前确认 RTC 时间，并通过 4×4 键盘设置六位密码。
-
 
